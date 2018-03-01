@@ -23,5 +23,5 @@ cv2.imshow('cropped', cropped)
 cv2.imshow('rotated', rotated)
 cv2.imshow('original', image)
 cv2.imshow('resized', resized)
-cv2.waitKey(0)
+cv2.waitKey(0) & 0xFF
 cv2.destroyAllWindows()
