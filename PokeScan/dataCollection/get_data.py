@@ -1,6 +1,7 @@
 import requests
-import shutil, os
+import shutil, os, sys
 import json
+from datetime import datetime
 
 cwd = os.getcwd()
 
@@ -17,7 +18,7 @@ def write_json_to_file(path, jsn):
 def read_json_from_file(path):
     "Returns a json object from path."
     with open(path, 'r') as f:
-        return json.load(path)
+        return json.load(f)
 
 def download_png(url, path):
     "Downloads a picture to path."
@@ -34,12 +35,12 @@ def get_all_sets():
 
 def get_set_by_id(id):
     "Gets a specific set by id"
-    r = requests.get(f'https://api.pokemontcg.io/v1/sets/{id}')
+    r = requests.get('https://api.pokemontcg.io/v1/sets/{}'.format(id))
     return r.json()['set']
 
 def get_card_by_id(id):
     "Gets a card by id."
-    r = requests.get(f'https://api.pokemontcg.io/v1/cards/{id}')
+    r = requests.get('https://api.pokemontcg.io/v1/cards/{}'.format(id))
     return r.json()['card']
 
 def get_cards_by_set(set):
@@ -50,10 +51,15 @@ def get_cards_by_set(set):
     cards = list()
     
     for card_number in range(1, number_of_cards + 1):
-        cards.append(get_card_by_id(f'{set_id}-{card_number}'))
+        cards.append(get_card_by_id('{}-{}'.format(set_id, card_number)))
     
-    return cards
+    return cards    
 
+def update_change_log(path):
+    "Creates and additional entry in change.log for update purposes in path."
+    with open(os.path.join(path, 'change.log'), 'a') as f:
+        f.write(datetime.now().strftime('%m/%d/%Y %X'))
+        f.write('\n')
 
 
 data_path = os.path.join(cwd, 'data')
@@ -67,12 +73,32 @@ write_json_to_file(os.path.join(data_path, 'sets.json'), all_sets)
 for each_set in all_sets:
     set_folder = os.path.join(data_path, each_set['code'])
 
-    mkdir(set_folder)
+    update = True
+    try:
+        last_updated = ''
+        with open(os.path.join(set_folder, 'change.log'), 'r') as f:
+            last_updated = f.readlines()[-1].strip()
+            set_updated_at = datetime.strptime(each_set['updatedAt'], '%m/%d/%Y %X')
+            system_updated = datetime.strptime(last_updated, '%m/%d/%Y %X')
+            if (set_updated_at < system_updated):
+                print("Already have latest information for {} {}!".format(each_set['series'], each_set['name']))
+                update = False
 
-    download_png(each_set['symbolUrl'], os.path.join(set_folder, 'symbol.png'))
+    except (FileNotFoundError, IndexError):
+        print('Set not found, downloading now...')
+        pass
 
-    print(f"Now downloading cards for {each_set['series']} {each_set['name']}...")
+    if update:
+        mkdir(set_folder)
 
-    cards = get_cards_by_set(each_set)
+        download_png(each_set['symbolUrl'], os.path.join(set_folder, 'symbol.png'))
 
-    write_json_to_file(os.path.join(set_folder, 'cards.json'), cards)
+        print("Now downloading cards for {} {}...".format(each_set['series'], each_set['name']))
+
+        cards = get_cards_by_set(each_set)
+
+        write_json_to_file(os.path.join(set_folder, 'cards.json'), cards)
+
+        update_change_log(set_folder)
+
+
