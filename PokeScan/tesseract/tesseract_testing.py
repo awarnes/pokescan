@@ -5,6 +5,14 @@ import pytesseract
 import re
 from imutils import rotate_bound 
 
+"""
+Basic work flow:
+1: Image processing
+2: OCR
+3: Uploading
+4: Sorting
+"""
+
 # imagePath = "/Users/alexanderwarnes/Desktop/PokeScan-Photos/originals/FifthBatch/FixedCards/IMG_2101.jpg"
 
 imagePath = "/Users/alexanderwarnes/Desktop/PokeScan-Photos/originals/FourthBatch/1TestScans/IMG_1882.jpg"
