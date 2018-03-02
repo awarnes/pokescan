@@ -41,7 +41,12 @@ def get_set_by_id(id):
 def get_card_by_id(id):
     "Gets a card by id."
     r = requests.get('https://api.pokemontcg.io/v1/cards/{}'.format(id))
-    return r.json()['card']
+    try:
+        return r.json()['card']
+    except Exception as e:
+        print(e)
+        print(r.json())
+        return r.json()
 
 def get_cards_by_set(set):
     "Creates a json file for all the cards in a given set. Input set must be a json object."
