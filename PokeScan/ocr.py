@@ -39,19 +39,19 @@ def main():
         except IndexError:
             print('Wrong Folder!')
             return
-        print(f'Total Length: {len(images)}')
+        print('Total Length: {}'.format(len(images)))
         for image in images:
             img = tm.get_image(image)
             if tm.verify_and_parse_result(tm.ocr_image(tm.get_part_of_image(img))):
 
                 # print(tm.verify_and_parse_result(tm.ocr_image(tm.get_part_of_image(img))))
                 total = total + 1
-                print(f'{total} / {len(images)}')
+                print('{} / {}'.format(total, len(images)))
             # else:
             #     # print(tm.verify_and_parse_result(tm.ocr_image(tm.get_part_of_image(rotate_around(img)))))
     
-    print(f'Completed Total: {total}')
-    print(f'Percent Read: {total / len(images)}')
+    print('Completed Total: {}'.format(total))
+    print('Percent Read: {}'.format(total / len(images)))
 
 if __name__ == "__main__":
     start = time.time()
