@@ -1,7 +1,6 @@
 import re, math
 import argparse
 
-import numpy as np
 import pytesseract, cv2
 
 from opencv.imutils import rotate_around
