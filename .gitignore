@@ -2,3 +2,7 @@ env-poke-scan/*
 env-poke-scan/
 .vscode
 
+PokeScan/dataCollection/data/*
+PokeScan/dataCollection/data/
+__pycache__/
+__pycache__/*

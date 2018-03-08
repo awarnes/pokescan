@@ -17,7 +17,7 @@ def resize(image, height=100.0):
     
     return resized
 
-def rotate_bound(image, angle=180):
+def rotate_around(image, angle=180):
     # grab the dimensions of the image and then determine the
     # center
     (h, w) = image.shape[:2]

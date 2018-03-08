@@ -21,7 +21,7 @@ img = cv2.imread(imagePath)
 height, _, _ = img.shape
 print(height)
 
-bottom10 = height - int(height * .12)
+bottom10 = height - int(height * .07)
 # get image height, get bottom 10% and crop to that height
 
 result = pytesseract.image_to_string(img[bottom10:height,:])
